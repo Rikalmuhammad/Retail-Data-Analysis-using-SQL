@@ -1,0 +1,4 @@
+department_name,employee_id,name,position,salary
+IT Department,1,John Doe,Data Analyst,Rp 5.000.000
+R&D Department,2,Jane Smith,Data Scientist,Rp 7.500.000
+null,3,Mark Evans,Manager,Rp 12.000.000
