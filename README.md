@@ -79,7 +79,6 @@ CREATE TABLE employee (
 
 -- 5. Create the organizational_structure table
 CREATE TABLE organizational_structure (
-    position VARCHAR(50),
     employee_id INT,
     manager_id INT,
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
@@ -129,10 +128,103 @@ VALUES
 -- Insert data into the organizational_structure table
 INSERT INTO organizational_structure (position, employee_id, manager_id)
 VALUES
-('Manager', 1, NULL),
-('Cashier', 2, 1),
-('Warehouse Staff', 3, 1),
-('Cashier', 4, 1),
-('Manager', 5, NULL),
-('Warehouse Staff', 6, 5);
+(1, NULL),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, NULL),
+(6, 5);
 ```
+### 2. Data Join and How to Save It
+
+To make it easier for me to process the data, I usually join tables that have relationships between tables considering that our database consists of more than one table. We can use the JOIN command for this. To avoid duplicate columns, I prefer to use USING instead of ON to connect the tables.
+As a note, to save the result of this query, we will use the CREATE TABLE command so that we can call the result table easily in the future.
+
+```sql
+CREATE TABLE retail AS
+SELECT *
+FROM product
+JOIN transaction_data USING (product_id)
+JOIN category USING (category_id);
+
+CREATE TABLE structure AS
+SELECT * 
+FROM employee
+JOIN organizational_structure USING (employee_id);
+```
+### 3. Data Exploration & Cleaning
+
+- **Null Value Check**: Check for any null values in the dataset and delete records with missing data.
+- **Table Join**: Show relational table join in dataset.
+- **Record Count**: Determine the total number of records in the dataset.
+- **Product Count**: Find out how many unique products are in the dataset.
+- **Category Count**: Identify all unique product categories in the dataset.
+- **Transaction Count**: Find out how many unique transactions in the dataset.
+
+```sql
+SELECT * FROM retail
+WHERE category_id IS NULL OR product_id IS NULL OR	product_name IS NULL OR	price IS NULL OR date_added IS NULL OR	
+transaction_id IS NULL OR	quantity IS NULL OR	total_price IS NULL OR	transaction_date IS NULL OR	
+payment_method IS NULL OR	category_name IS NULL;
+
+-- if any data appears, then continue with the DELETE command
+
+DELETE FROM retail
+WHERE category_id IS NULL OR product_id IS NULL OR	product_name IS NULL OR	price IS NULL OR date_added IS NULL OR	
+transaction_id IS NULL OR	quantity IS NULL OR	total_price IS NULL OR	transaction_date IS NULL OR	
+payment_method IS NULL OR	category_name IS NULL;
+
+SELECT * FROM retail
+ORDER BY 2;
+
+SELECT COUNT(*) AS total_records FROM retail;
+SELECT COUNT(DISTINCT product_id) AS total_product FROM retail;
+SELECT DISTINCT category_name FROM retail;
+SELECT COUNT(DISTINCT transaction_id) AS total_transactions FROM retail;
+```
+### 4. Data Analysis & Findings
+
+The following SQL queries were developed to answer specific business questions:
+
+Basic Querying and Filtering
+- Display products in a specific category (e.g., food, drink, etc.).
+- Show products added after a certain date, sorted by the date they were added.
+  
+Aggregation and Grouping
+- Count the total number of products in each category.
+- Display the number of transactions for each payment type (cash, credit card, e-wallet, etc.).
+  
+Joining and Relating Tables
+- Show product data with transaction data, including both sold and unsold products.
+- Join the product table with the category table to show the product name along with its category and price.
+  
+Aggregation Functions and Advanced Analysis
+- Display the top 3 products with the highest sales in each category.
+- Calculate the total revenue from transactions in a specific month.
+  
+Using Aliases and String Functions
+- Display the full product name (combination of the brand name and product name) in uppercase.
+- Display products with the letter "A" in their name.
+- Using Common Table Expressions (CTE) and Subqueries
+- Display products with prices above the average price of products in the same category.
+- Use a subquery to show products with stock levels above 100 units.
+  
+Recursive CTE for Hierarchical Structure
+- Display the employee hierarchy, from manager down to cashier, using the organizational structure.
+  
+Using Other Built-in Functions
+- Display transaction dates in the format "DD-MM-YYYY".
+- Calculate the total store operating hours each day (based on store opening and closing times).
+  
+Query Optimization and Indexing
+- Create an index on the transaction table to improve query performance based on the transaction date.
+
+These questions cover a range of SQL skills, from basic data retrieval to more advanced techniques like aggregation, joining, and hierarchical queries.
+
+
+
+
+
+
+
+
