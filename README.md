@@ -187,8 +187,20 @@ SELECT COUNT(DISTINCT transaction_id) AS total_transactions FROM retail;
 The following SQL queries were developed to answer specific business questions:
 
 Basic Querying and Filtering
-- Display products in a specific category (e.g., food, drink, etc.).
-- Show products added after a certain date, sorted by the date they were added.
+- Display products in a Beverages category.
+```sql
+SELECT product_name 
+FROM product
+JOIN category USING (category_id)
+WHERE category_name = 'Beverages';
+```
+- Show products added after 2024-02-01, sorted by the date they were added.
+```sql
+SELECT product_name, date_added
+FROM product
+WHERE date_added > '2024-02-01'
+ORDER BY date_added;
+```
   
 Aggregation and Grouping
 - Count the total number of products in each category.
