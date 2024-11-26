@@ -204,11 +204,32 @@ ORDER BY date_added;
   
 Aggregation and Grouping
 - Count the total number of products in each category.
+```sql
+SELECT category_name, COUNT(*) AS total_products
+FROM product
+JOIN category USING (category_id)
+GROUP BY category_name;
+```
 - Display the number of transactions for each payment type (cash, credit card, e-wallet, etc.).
+```sql
+SELECT payment_method, COUNT(*) AS transaction_count
+FROM transaction_data
+GROUP BY payment_method;
+```
   
 Joining and Relating Tables
 - Show product data with transaction data, including both sold and unsold products.
+```sql
+SELECT p.product_name, t.transaction_id, t.quantity, t.total_price
+FROM product p
+LEFT JOIN transaction_data t ON p.product_id = t.product_id;
+```
 - Join the product table with the category table to show the product name along with its category and price.
+```sql
+SELECT p.product_name, c.category_name, p.price
+FROM product p
+JOIN category c ON p.category_id = c.category_id;
+```
   
 Aggregation Functions and Advanced Analysis
 - Display the top 3 products with the highest sales in each category.
