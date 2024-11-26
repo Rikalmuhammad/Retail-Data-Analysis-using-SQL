@@ -57,8 +57,8 @@ CREATE TABLE product (
     FOREIGN KEY (category_id) REFERENCES category(category_id)
 );
 
--- 3. Create the transaction table
-CREATE TABLE transaction (
+-- 3. Create the transaction_data table
+CREATE TABLE transaction_data (
     transaction_id INT PRIMARY KEY,
     product_id INT,
     quantity INT,
@@ -105,8 +105,8 @@ VALUES
 (5, 'Pepsi 500ml', 1, 15000, '2024-05-01'),
 (6, 'UHT Milk', 1, 7000, '2024-06-01');
 
--- Insert data into the transaction table
-INSERT INTO transaction (transaction_id, product_id, quantity, total_price, transaction_date, payment_method)
+-- Insert data into the transaction_data table
+INSERT INTO transaction_data (transaction_id, product_id, quantity, total_price, transaction_date, payment_method)
 VALUES
 (1, 1, 3, 45000, '2024-11-01', 'Cash'),
 (2, 2, 2, 7000, '2024-11-01', 'Credit Card'),
@@ -126,7 +126,7 @@ VALUES
 (6, 'Sandi', 'Hadi', 'Warehouse Staff', '2018-05-30');
 
 -- Insert data into the organizational_structure table
-INSERT INTO organizational_structure (position, employee_id, manager_id)
+INSERT INTO organizational_structure (employee_id, manager_id)
 VALUES
 (1, NULL),
 (2, 1),
