@@ -233,7 +233,33 @@ JOIN category c ON p.category_id = c.category_id;
   
 Aggregation Functions and Advanced Analysis
 - Display the top 3 products with the highest sales in each category.
-- Calculate the total revenue from transactions in a specific month.
+```sql
+WITH SalesRank AS (
+    SELECT p.product_name, 
+           c.category_name, 
+           SUM(t.total_price) AS total_sales,
+           RANK() OVER (PARTITION BY c.category_name ORDER BY SUM(t.total_price) DESC) AS product_rank
+    FROM product p
+    JOIN category c ON p.category_id = c.category_id
+    JOIN transaction_data t ON p.product_id = t.product_id
+    GROUP BY p.product_name, c.category_name
+)
+SELECT product_name, category_name, total_sales, product_rank
+FROM SalesRank
+WHERE product_rank <= 3;
+```
+- Calculate the total revenue from transactions in a specific date.
+```sql
+SELECT SUM(total_price) AS feb_total_revenue
+FROM transaction_data
+WHERE transaction_date = '2024-11-02';
+
+-- or
+
+SELECT CONCAT('Rp ', FORMAT(SUM(total_price), 0, 'id_ID')) AS feb_total_revenue
+FROM transaction_data
+WHERE transaction_date = '2024-11-02';
+```
   
 Using Aliases and String Functions
 - Display the full product name (combination of the brand name and product name) in uppercase.
