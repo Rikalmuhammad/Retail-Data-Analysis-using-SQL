@@ -263,9 +263,41 @@ WHERE transaction_date = '2024-11-02';
   
 Using Aliases and String Functions
 - Display the full product name (combination of the brand name and product name) in uppercase.
-- Display products with the letter "A" in their name.
-- Using Common Table Expressions (CTE) and Subqueries
+```sql
+SELECT UPPER(CONCAT('Brand: ', product_name)) AS full_product_name
+FROM product;
+```
+- Display products start with the letter "C" in their name.
+```sql
+SELECT product_name
+FROM product
+WHERE product_name LIKE 'C%';
+```
+Using Common Table Expressions (CTE) and Subqueries
 - Display products with prices above the average price of products in the same category.
+there are two ways that I can find, the first way is using subquery:
+```sql
+SELECT product_name, category_name, total_price
+FROM retail r
+WHERE total_price > (
+    SELECT AVG(total_price)
+    FROM retail
+    WHERE category_id = r.category_id
+);
+```
+second way is using window function (we need to use CTE because window function cant work in `WHERE` clause)
+```sql
+WITH avg_prices AS (
+    SELECT product_name, category_name, total_price,
+           AVG(total_price) OVER (PARTITION BY category_id) AS avg_price
+    FROM retail
+)
+SELECT product_name, category_name, total_price
+FROM avg_prices
+WHERE total_price > avg_price;
+```
+- The first query is easier to understand and more compatible with all DBMSs, but can be less efficient on large datasets as the subquery is calculated for each row.
+- The second query is more efficient and faster in databases that support window functions, especially for large datasets, as it only calculates the average once per category instead of for each row.
 - Use a subquery to show products with stock levels above 100 units.
   
 Recursive CTE for Hierarchical Structure
