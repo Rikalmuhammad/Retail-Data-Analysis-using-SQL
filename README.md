@@ -298,9 +298,8 @@ FROM avg_prices
 WHERE total_price > avg_price;
 ```
 -- The first query is easier to understand and more compatible with all DBMSs, but can be less efficient on large datasets as the subquery is calculated for each row.
--- The second query is more efficient and faster in databases that support window functions, especially for large datasets, as it only calculates the average once per category instead of for each row.
 
-- Use a subquery to show products with stock levels above 100 units.
+-- The second query is more efficient and faster in databases that support window functions, especially for large datasets, as it only calculates the average once per category instead of for each row.
   
 Recursive CTE for Hierarchical Structure
 - Display the employee hierarchy, from manager down to cashier, using the organizational structure.
