@@ -303,13 +303,41 @@ WHERE total_price > avg_price;
   
 Recursive CTE for Hierarchical Structure
 - Display the employee hierarchy, from manager down to cashier, using the organizational structure.
+```sql
+WITH RECURSIVE EmployeeHierarchy AS (
+    -- Base case: Select employees who are managers (manajer puncak)
+    SELECT e.employee_id, e.first_name, e.last_name, e.position, os.manager_id
+    FROM employee e
+    JOIN organizational_structure os ON e.employee_id = os.employee_id
+    WHERE os.manager_id IS NULL  -- Hanya karyawan yang tidak memiliki manajer
+
+    UNION ALL
+    
+    -- Recursive case: Select employees who report to a manager (bawahan)
+    SELECT e.employee_id, e.first_name, e.last_name, e.position, os.manager_id
+    FROM employee e
+    JOIN organizational_structure os ON e.employee_id = os.employee_id
+    JOIN EmployeeHierarchy eh ON os.manager_id = eh.employee_id  -- Hubungkan dengan manajer sebelumnya
+)
+-- Tampilkan hasil dari EmployeeHierarchy untuk memeriksa manager_id
+SELECT employee_id, first_name, last_name, position, manager_id
+FROM EmployeeHierarchy
+ORDER BY employee_id;
+```
   
 Using Other Built-in Functions
 - Display transaction dates in the format "DD-MM-YYYY".
-- Calculate the total store operating hours each day (based on store opening and closing times).
+```sql
+SELECT transaction_id, product_id, quantity, total_price, 
+       DATE_FORMAT(transaction_date, '%d-%m-%Y') AS transaction_date
+FROM transaction_data;
+```
   
 Query Optimization and Indexing
 - Create an index on the transaction table to improve query performance based on the transaction date.
+```sql
+CREATE INDEX idx_transaction_date ON transaction_data (transaction_date);
+```
 
 These questions cover a range of SQL skills, from basic data retrieval to more advanced techniques like aggregation, joining, and hierarchical queries.
 
